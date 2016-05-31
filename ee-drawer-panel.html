@@ -1,0 +1,344 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!-- Iron -->
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/communication-icons.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+<!-- Paper -->
+<link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../paper-item/paper-item-body.html">
+
+<!-- Third -->
+<link rel="import" href="../image-mask/image-mask.html">
+<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <ee-drawer-panel></ee-drawer-panel>
+
+Example:
+
+    {'filter':['All', 'Nahid', 'Jalil'], 'items':[
+        {'name': 'News', 'items': 
+              [
+                {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+              ]
+            },
+            {'name': 'Please rate', 'items': 
+              [
+                {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+              ]
+            },
+            {'name': 'Upcoming', 'items': 
+              [
+                {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+              ]
+            }
+          ]
+        }
+      }
+    }
+
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="ee-drawer-panel">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+      }
+
+      .list-panel {
+        background-color: #fafafa;
+      }
+
+      .list-panel {
+        --paper-header-panel-standard-container: {
+          border-right: 1px solid #ccc;
+        };
+      }
+
+      .list {
+        padding: 0;
+      }
+
+      .list paper-icon-item {
+        --paper-item-focused-before: {
+          background-color: #FAFAFA;
+        };
+        height: 72px;       
+        background-color: #fff;
+      }
+
+      .list paper-icon-item :before {
+        content : "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        width: 75%;
+        border-bottom: 1px solid #f3f3f3;
+      }
+
+      .list-divider {
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        height: 30px;
+        background-color: #f3f3f3;
+        font-size: 12px;
+      }
+
+      .list-divider div {
+        margin: 0 auto;
+      }
+
+      .main-drawer-panel:not([narrow]) [list-toggle] {
+        display: none;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .transparent {
+        opacity: 0;
+      }
+
+      .row-name {
+        font-size: 15px;
+        color: #4a4a4a;
+      }
+
+      .row-time {
+        font-size: 13px;
+        color: #9b9b9b;
+      }
+
+      .row-date {
+        font-size: 13px;
+        color: #9b9b9b;
+      }
+
+      .row-rate {
+        position: absolute;
+        font-size: 12px;
+        color: #9b9b9b;
+        right: 6px;
+        bottom: 1.5px;
+      }
+
+      .message-indicator {
+        --iron-icon-height: 14px;
+        --iron-icon-width: 14px;
+        color: #f46f5a;
+        opacity: 1;
+      }
+
+      paper-drawer-panel {
+        --paper-drawer-panel-right-drawer-container: {
+          background-color: #f9fafb;
+        };        
+      }
+
+      #rightDrawerToggleBack {
+        position: fixed;
+        left: 5px;
+        top: 10px;
+        z-index: +1;
+        border-radius: 50%;
+        color: white;
+      }
+
+      .filter-input {
+        margin: 0 6px;
+      }
+
+      .filter-wrapper {
+        background-color: #f9fafb;
+        border-bottom: solid 1px #dddddd;
+      }
+    </style>
+
+    <paper-drawer-panel id="mainDrawerPanel" class="main-drawer-panel" 
+      responsive-width="800px"
+      drawer-width="[[_computeListWidth(_isLeftMobile, _triggerResize)]]" drawer-toggle-attribute="left-toggle"
+      on-paper-responsive-change="_drawerResponsiveChanged" data-args="leftDrawerToggle"
+      narrow="{{_isLeftMobile}}" main>
+
+      <paper-header-panel class="list-panel" drawer>
+
+        <!-- Filter -->
+        <div class="filter-wrapper paper-header">
+          <vaadin-combo-box class="filter-input"
+            items="[[leftDrawerData.filter]]"
+            value="All">
+          </vaadin-combo-box>
+        </div>
+
+        <!-- List -->
+        <paper-menu class="list content" on-iron-activate="_listTap" data-args="mainDrawerPanel">
+          <template is="dom-repeat" items="[[leftDrawerData.items]]" as="category">
+            <div class="list-divider"><div class="list-divider-text">[[category.name]]</div></div>
+            <template is="dom-repeat" items="[[category.items]]">
+              <paper-icon-item on-tap="_listItemSelected">
+                <image-mask class="row-image" item-icon
+                  src$="[[item.avatar]]" size="50">
+                </image-mask>
+                <paper-item-body two-line>
+                  <div class="row-name">[[item.title]]</div>
+                  <div secondary class="row-date">[[item.subtitle]]</div>
+                </paper-item-body>
+                <div secondary class="row-time">[[item.info]]</div>
+                <span>&nbsp</span>
+                <iron-icon class="message-indicator" icon$="[[item.icon]]"></iron-icon>
+                </paper-icon-button>
+              </paper-icon-item>
+            </template>
+          </template>
+        </paper-menu>
+      </paper-header-panel>
+
+      <paper-drawer-panel responsive-width="600px" id="chatDrawer"
+        on-paper-responsive-change="_drawerResponsiveChanged" data-args="rightDrawerToggle"
+        drawer-toggle-attribute="right-toggle"
+        narrow="{{_isRightMobile}}"
+        drawer-width="[[_computeListWidthRight(_isRightMobile, _triggerResize)]]" right-drawer main>
+
+        <div drawer class="right-drawer">
+          <paper-icon-button id="rightDrawerToggleBack" 
+            icon="close" on-tap="_listTap" data-args="chatDrawer">
+          </paper-icon-button>
+          <content select="[right-drawer]"></content>
+        </div>
+        <paper-header-panel class="content-panel" main>
+          <div class="paper-header layout horizontal">
+            <paper-icon-button icon="arrow-back" id="leftDrawerToggle" 
+              class="paper-header" left-toggle>
+            </paper-icon-button>
+            <span class="flex"></span>
+            <paper-icon-button icon="communication:forum" id="rightDrawerToggle"
+              class="paper-header" right-toggle>
+            </paper-icon-button>
+          </div>
+          
+          <!-- Main Content -->
+          <div class="content">
+            <content select="[drawer-detail]"></content>
+          </div>
+        </paper-header-panel>
+      </paper-drawer-panel>
+    </paper-header-panel>
+  </paper-drawer-panel>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'ee-drawer-panel',
+
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+
+      properties: {
+
+        _triggerResize: {
+          type: Boolean,
+          value: true
+        },
+
+        leftDrawerData: {
+          type: Object,
+          value: function() { return {}; },
+          notify: true
+        },
+
+        selectedItem: {
+          type: Object,
+          value: function() { return {}; },
+          notify: true
+        }
+
+      },
+
+      listeners: {
+        'iron-resize': '_onIronResize'
+      },
+
+      _onIronResize: function() {
+        this._triggerResize = !this._triggerResize;
+      },
+
+      attached: function() {
+      },
+
+      pageSelected: function() {
+        this._fireDrawerState();
+      },
+
+      _listItemSelected: function(e) {
+        this.selectedItem = e.model.item;
+      },
+
+      _computeListWidth: function(isMobile, trigger) {
+        // when in mobile screen size, make the list be 100% width to cover the whole screen
+        return isMobile ? '100%' : '25%';
+      },
+
+      _computeListWidthRight: function(isMobile, trigger) {
+        // when in mobile screen size, make the list be 100% width to cover the whole screen
+        if (this._isLeftMobile) {
+          return isMobile ? '100%' : '25%';
+        } else{
+          return isMobile ? '100%' : (25 / (100 - 25) * 100).toString() + '%';
+        }
+      },
+
+      _listTap: function(e) {
+        var drawer = Polymer.dom(this.root).querySelector('#' + e.currentTarget.dataset.args);
+        drawer.closeDrawer();
+      },
+
+      _fireDrawerState: function() {
+        this.fire('drawer-changed', this.$.chatDrawer.narrow);
+      },
+
+      _drawerResponsiveChanged: function(e) {
+        var narrow = e.detail.narrow;
+        var btn = Polymer.dom(this.root).querySelector('#' + e.currentTarget.dataset.args);
+        var backBtn = Polymer.dom(this.root).querySelector('#' + e.currentTarget.dataset.args + 'Back');
+
+        this._fireDrawerState();       
+
+        if (narrow) {
+          btn.classList.remove('hidden');      
+          if(backBtn !== null) {
+            backBtn.classList.remove('transparent');
+          }
+        } else{
+          btn.classList.add('hidden');          
+          if(backBtn !== null) {
+            backBtn.classList.add('transparent');
+          }
+        }
+      }
+
+    });
+  </script>
+</dom-module>

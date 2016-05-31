@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>ee-drawer-panel Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../ee-drawer-panel.html">
+  </head>
+  <body unresolved>
+
+    <p>An example of <code>&lt;ee-drawer-panel&gt;</code>:</p>
+
+    <ee-drawer-panel id="eedr">
+      <div drawer-detail>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+        <div>Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detail Jojojo detailJojojo detail Jojojo detail</div>
+      </div>
+      <div right-drawer>
+        jojojo
+        jojojo
+        jojojo
+        jojojo
+      </div>
+    </ee-drawer-panel>
+
+
+    <script>
+      document.addEventListener('WebComponentsReady', function(e) {
+        var seedElement = document.querySelector('#eedr');
+        seedElement.leftDrawerData = {'filter':['All', 'Nahid', 'Jalil'], 'items':
+                  [
+                    {'name': 'News', 'items': 
+                      [
+                        {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                        {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+                      ]
+                    },
+                    {'name': 'Please rate', 'items': 
+                      [
+                        {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                        {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+                      ]
+                    },
+                    {'name': 'Upcoming', 'items': 
+                      [
+                        {'title': 'Sahra, Steeve', 'subtitle': 'June 12 2016', 'info': '3Pm - 6PM', 'icon': 'icons:question-answer', 'avatar': ''},
+                        {'title': 'Sahra, John', 'subtitle': 'June 14 2016', 'info': '3Pm - 6PM', 'icon': '', 'avatar': ''}
+                      ]
+                    }
+                  ]
+                };
+      });
+      
+    </script>
+
+  </body>
+</html>

@@ -316,18 +316,11 @@ Example:
       _rightResponsiveChanged: function(e) {
         var narrow = e.detail.narrow;
         var btn = this.$.leftDrawerToggle;
-        var backBtn = this.$.leftDrawerToggleBack;
 
         if (narrow) {
-          btn.classList.remove('hidden');      
-          if(backBtn !== null) {
-            backBtn.classList.remove('transparent');
-          }
+          btn.classList.remove('hidden');
         } else{
-          btn.classList.add('hidden');          
-          if(backBtn !== null) {
-            backBtn.classList.add('transparent');
-          }
+          btn.classList.add('hidden');
         }
 
         this.fire('right-drawer-change', narrow);

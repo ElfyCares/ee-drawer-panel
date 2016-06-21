@@ -285,13 +285,6 @@ Example:
         this._triggerResize = !this._triggerResize;
       },
 
-      attached: function() {
-      },
-
-      pageSelected: function() {
-        this._fireDrawerState();
-      },
-
       _listItemSelected: function(e) {
         this.selectedItem = e.model.item;
       },
@@ -315,16 +308,10 @@ Example:
         drawer.closeDrawer();
       },
 
-      _fireDrawerState: function() {
-        this.fire('drawer-changed', this.$.chatDrawer.narrow);
-      },
-
       _drawerResponsiveChanged: function(e) {
         var narrow = e.detail.narrow;
         var btn = Polymer.dom(this.root).querySelector('#' + e.currentTarget.dataset.args);
         var backBtn = Polymer.dom(this.root).querySelector('#' + e.currentTarget.dataset.args + 'Back');
-
-        this._fireDrawerState();       
 
         if (narrow) {
           btn.classList.remove('hidden');      
@@ -336,6 +323,12 @@ Example:
           if(backBtn !== null) {
             backBtn.classList.add('transparent');
           }
+        }
+
+        if (e.currentTarget.dataset.args == 'rightDrawerToggle') {
+          this.fire('right-drawer-change', narrow);
+        } else if(e.currentTarget.dataset.args == 'leftDrawerToggle') {
+          this.fire('left-drawer-change', narrow);
         }
       }
 
